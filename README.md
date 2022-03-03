@@ -7,13 +7,10 @@ yarn install
 
 ### Compiles and hot-reloads for development
 ```
-yarn serve
+yarn start
 ```
 
-### Compiles and minifies for production
+### 開啟網頁
 ```
-yarn build
+http://localhost:8080/
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
