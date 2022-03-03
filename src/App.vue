@@ -80,38 +80,19 @@ export default {
   },
   methods: {
     getDataList() {
-      let data = [
-        {
-          "site_id": "臺北市松山區",
-          "household_ordinary_m": 83284,
-          "household_single_m": 12208,
-          "household_ordinary_f": 93038,
-          "household_single_f": 15663
-        },
-        {
-          "site_id": "臺北市士林區",
-          "household_ordinary_m": 118944,
-          "household_single_m": 17519,
-          "household_ordinary_f": 127230,
-          "household_single_f": 19577
-        },
-      ]
-      this.organizeData(data)
-      this.show = false
-      // api.get('/api/v1/rest/datastore/301000000A-000082-041').then(response => {
-      //   if (response.status == 200) {
-      //     const tlist = response.data.result.records
-      //     tlist.shift()
-      //     this.organizeData(tlist)
-      //   } else {
-      //     alert('讀取資料不正確')
-      //   }
-      //   this.show = false
-      // }).catch(err => {
-      //   console.log("err = ")
-      //   console.log(err)
-      //   this.show = false
-      // })
+      api.get('/api/v1/rest/datastore/301000000A-000082-041').then(response => {
+        if (response.status == 200) {
+          const tlist = response.data.result.records
+          tlist.shift()
+          this.organizeData(tlist)
+        } else {
+          alert('讀取資料不正確')
+        }
+        this.show = false
+      }).catch(err => {
+        alert('取得資料不正確')
+        this.show = false
+      })
     },
     organizeData(data) {
       /*
