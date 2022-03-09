@@ -10,7 +10,7 @@
           </b-row>
           <b-row>
             <b-col>
-              <div class="p-2">108年人口戶數及性別</div>
+              <div class="p-2">109年人口戶數及性別</div>
             </b-col>
           </b-row>
         </b-col>
@@ -76,20 +76,21 @@ export default {
   },
   mounted() {
     this.getDataList()
-
   },
   methods: {
     getDataList() {
-      api.get('/api/v1/rest/datastore/301000000A-000082-041').then(response => {
+      const url = 'https://www.ris.gov.tw/rs-opendata/api/v1/datastore/ODRP019/109'
+
+      api.get(url).then(response => {
         if (response.status == 200) {
-          const tlist = response.data.result.records
-          tlist.shift()
+          const tlist = response.data.responseData
           this.organizeData(tlist)
         } else {
           alert('讀取資料不正確')
         }
         this.show = false
       }).catch(err => {
+        console.log(err)
         alert('取得資料不正確')
         this.show = false
       })
@@ -111,15 +112,14 @@ export default {
       }).toList()
       temp.forEach(item => {
         const tempObj = jslinq(item.elements)
-        let sum_ordinary_m = tempObj.sum(el => { return parseInt(el.household_ordinary_m)})
-        let sum_single_m = tempObj.sum(el => { return parseInt(el.household_single_m)})
-        let sum_ordinary_f = tempObj.sum(el => { return parseInt(el.household_ordinary_f)})
-        let sum_single_f = tempObj.sum(el => { return parseInt(el.household_single_f)})
+        let sum_ordinary_m = tempObj.select(el => { return el.household_ordinary_m }).sum(el => { return parseInt(el)})
+        let sum_single_m = tempObj.select(el => { return el.household_single_m }).sum(el => { return parseInt(el)})
+        let sum_ordinary_f = tempObj.select(el => { return el.household_ordinary_f }).sum(el => { return parseInt(el)})
+        let sum_single_f = tempObj.select(el => { return el.household_single_f }).sum(el => { return parseInt(el)})
         this.datalist.push({
           "site_id": item.key,
           "household_m": [sum_ordinary_m,sum_single_m],
           "household_f": [sum_ordinary_f,sum_single_f]
-
         })
       })
     },
@@ -130,7 +130,6 @@ export default {
         },
         legend: {
           show: true,
-          bottom: 'bottom',
           bottom: 10,
           data: ['男', '女']
         },
@@ -177,7 +176,7 @@ export default {
         }).toList()
         this.drawLine({ "name": ['共同生活戶', '單獨生活戶'],"household_m": data[0].household_m, "household_f": data[0].household_f})
       } 
-    }
+    },
   }
 }
 
